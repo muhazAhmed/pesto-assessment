@@ -1,17 +1,14 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense } from "react";
 import "./App.scss";
 import Loader from "./components/Loading/Loading";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { loadServer } from "./utils/axios";
 
 const Sidebar = lazy(() => import("./components/sidebar/Sidebar"));
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
+const Settings = lazy(() => import("./pages/Settings/Settings"));
 const PageNotFound = lazy(() => import("./components/pageNotFound/PageNotFound"));
 
 function App() {
-  useEffect(() => {
-    loadServer();
-  }, []);
 
   return (
     <div className="app">
@@ -20,6 +17,7 @@ function App() {
           <Suspense fallback={<Loader />}>
             <Routes>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="/*" element={<PageNotFound />} />
             </Routes>
           </Suspense>

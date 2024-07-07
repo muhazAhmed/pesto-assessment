@@ -1,7 +1,10 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import "./style.scss";
-import { sidebarItems } from "./ArrayOfItems";
+import { pathToIndex, sidebarItems } from "./ArrayOfItems";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useSettings } from "../../utils/SettingsContext";
+import { ResponseMessage } from "../../utils/Validations";
 
 interface SidebarProps {
   children: any;
@@ -9,14 +12,29 @@ interface SidebarProps {
 const Sidebar: FC<SidebarProps> = ({ children }) => {
   const [selectedItem, setSelectedItem] = useState<number | null>(0);
   const navigate = useNavigate();
+  const { settings } = useSettings();
 
-  const handleClick = (index: number) => {
+  useEffect(() => {
+    const currentPath = location.pathname;
+    setSelectedItem(pathToIndex[currentPath] ?? null);
+  }, [location.pathname]);
+
+  const handleClick = (index: number, path: string) => {
     setSelectedItem(index);
-    index === 0
-      ? navigate("/")
-      : index === 1
-      ? navigate("/about")
-      : navigate("/contact");
+    navigate(path);
+  };
+
+  const handleButton = () => {
+    if (settings.enableCreatingNewTasks) {
+      // Handle creating new tasks logic here
+    } else {
+      return toast.error(
+        ResponseMessage("Creating new tasks")?.SETTINGS_DISABLED,
+        {
+          duration: 4000,
+        }
+      );
+    }
   };
 
   return (
@@ -30,13 +48,13 @@ const Sidebar: FC<SidebarProps> = ({ children }) => {
                 selectedItem === index ? "icon-shell selected" : "icon-shell"
               }
               key={index}
-              onClick={() => handleClick(index)}
+              onClick={() => handleClick(index, item?.path)}
             >
               <i className={item?.icon}></i>
               <h4>{item?.label}</h4>
             </div>
           ))}
-          <div className="icon-shell new-task-button">
+          <div className="icon-shell new-task-button" onClick={handleButton}>
             <i className="fa-solid fa-plus"></i>
             <h4>New Task</h4>
           </div>

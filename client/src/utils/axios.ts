@@ -2,7 +2,6 @@ import axios from "axios";
 import { API_URI } from "./Constants";
 import toast from "react-hot-toast";
 import { ResponseMessage } from "./Validations";
-import { serverVariables } from "./ServerVariables";
 
 interface ApiResponse {
   response: any;
@@ -41,15 +40,5 @@ export const PostMethodAPI = async (
     return serverError(error);
   } finally {
     loading(false);
-  }
-};
-
-// ============ To Load The Server Initially ============
-export const loadServer = async () => {
-  try {
-    await axios.get(API_URI + serverVariables?.RELOAD_SERVER);
-  } catch (error) {
-    console.error("Server Is Not Connected");
-    toast.error(ResponseMessage()?.SERVER_ERROR);
   }
 };

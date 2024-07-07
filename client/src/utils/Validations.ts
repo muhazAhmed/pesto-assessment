@@ -3,6 +3,7 @@ export const ResponseMessage = (name?: any) => ({
   UNAVAILABLE: "Temporarily Unavailable",
   TRY_AGAIN: "Please Try Again After Some Time",
   FILTER_APPLIED: `${name} Filter Applied`,
+  SETTINGS_DISABLED: `${name} has been disabled in Settings`,
 
   // ============ Form ==========
   REQUIRED_FIELD: `Please Enter ${name}`,
