@@ -1,10 +1,13 @@
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import "./style.scss";
-import { useLocalStorage } from "../../utils/commonFunctions";
+import { openModal, useLocalStorage } from "../../utils/commonFunctions";
+import EditModal from "./SubComponents/EditModal";
 
 const Dashboard = () => {
   const [selectedFilter, setSelectedFilter] = useState<string>("");
+  const [editModal, setEditModal] = useState<boolean>(false);
+  const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const colors = ["glassPurple", "glassBlue", "glassPink"];
   const containerRef = useRef<HTMLDivElement>(null);
   const defaultSettings = useLocalStorage("defaultSettings");
@@ -44,6 +47,7 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard">
+      {editModal && <EditModal setShowModal={setEditModal} />}
       <div className="header">
         <h1>Tasks</h1>
         <div className="search-bar">
@@ -106,7 +110,11 @@ const Dashboard = () => {
               <h3>{item?.title}</h3>
               <p>{item?.desc}</p>
               <div className="buttons">
-                <i className="fa-solid fa-pencil" data-title="Edit"></i>
+                <i
+                  className="fa-solid fa-pencil"
+                  data-title="Edit"
+                  onClick={() => openModal(setEditModal)}
+                ></i>
                 <i className="fa-solid fa-trash" data-title="Delete"></i>
               </div>
             </motion.div>

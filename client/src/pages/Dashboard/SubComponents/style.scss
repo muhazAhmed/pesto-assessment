@@ -1,0 +1,68 @@
+.custom-modal {
+    .modal-body {
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            label {
+                font-weight: 600;
+            }
+
+            input,
+            textarea {
+                border: none;
+                border-bottom: 1px solid var(--gray);
+                padding: 5px;
+            }
+        }
+        
+        select {
+            border: 2px solid var(--primary);
+            border-radius: 25px;
+            padding: 5px;
+            width: 60%;
+        }
+    }
+
+    .modal-footer {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 1rem;
+
+        button {
+            border: none;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+
+            &:first-child {
+                background-color: var(--primary);
+                color: white;
+
+                &:hover {
+                    background-color: var(--primaryHover);
+                }
+            }
+
+            &:last-child {
+                border: 2px solid var(--glassRed);
+                color: black;
+
+                &:hover {
+                    background-color: var(--glassRed);
+                    border: 2px solid transparent;
+                }
+            }
+
+        }
+    }
+}
