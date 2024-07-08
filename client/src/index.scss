@@ -24,10 +24,9 @@ html::-webkit-scrollbar {
   content: attr(data-title);
   background-color: var(--primary);
   color: #fff;
-  position: absolute;
+  position: fixed;
   letter-spacing: 1px;
   padding: 10px;
-  left: 130%;
   white-space: nowrap;
   opacity: 0;
   z-index: 99999;
