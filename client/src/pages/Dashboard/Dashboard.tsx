@@ -3,11 +3,14 @@ import { motion } from "framer-motion";
 import "./style.scss";
 import { openModal, useLocalStorage } from "../../utils/commonFunctions";
 import EditModal from "./SubComponents/EditModal";
+import Loading from "../../components/Loading/Loading";
+import DeleteModal from "./SubComponents/DeleteModal";
 
 const Dashboard = () => {
   const [selectedFilter, setSelectedFilter] = useState<string>("");
   const [editModal, setEditModal] = useState<boolean>(false);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const colors = ["glassPurple", "glassBlue", "glassPink"];
   const containerRef = useRef<HTMLDivElement>(null);
   const defaultSettings = useLocalStorage("defaultSettings");
@@ -18,6 +21,18 @@ const Dashboard = () => {
       title: "demo title",
       desc: "ns properties like Padding, Spacing, Spacing Mode",
       status: "Done",
+    },
+    {
+      date: "10-04-2024",
+      title: "demo title 2",
+      desc: "ns properties like Padding, Spacing, Spacing Mode",
+      status: "In Progress",
+    },
+    {
+      date: "10-04-2024",
+      title: "demo title 2",
+      desc: "ns properties like Padding, Spacing, Spacing Mode",
+      status: "In Progress",
     },
     {
       date: "10-04-2024",
@@ -47,7 +62,9 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard">
-      {editModal && <EditModal setShowModal={setEditModal} />}
+      {loading && <Loading />}
+      {editModal && <EditModal setShowModal={setEditModal} page="edit" />}
+      {deleteModal && <DeleteModal setModal={setDeleteModal} />}
       <div className="header">
         <h1>Tasks</h1>
         <div className="search-bar">
@@ -115,7 +132,11 @@ const Dashboard = () => {
                   data-title="Edit"
                   onClick={() => openModal(setEditModal)}
                 ></i>
-                <i className="fa-solid fa-trash" data-title="Delete"></i>
+                <i
+                  className="fa-solid fa-trash"
+                  data-title="Delete"
+                  onClick={() => openModal(setDeleteModal)}
+                ></i>
               </div>
             </motion.div>
           );
