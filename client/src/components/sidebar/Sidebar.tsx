@@ -5,12 +5,15 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSettings } from "../../utils/SettingsContext";
 import { ResponseMessage } from "../../utils/Validations";
+import EditModal from "../../pages/Dashboard/SubComponents/EditModal";
+import { openModal } from "../../utils/commonFunctions";
 
 interface SidebarProps {
   children: any;
 }
 const Sidebar: FC<SidebarProps> = ({ children }) => {
   const [selectedItem, setSelectedItem] = useState<number | null>(0);
+  const [addModal, setAddModal] = useState<boolean>(false);
   const navigate = useNavigate();
   const { settings } = useSettings();
 
@@ -26,7 +29,7 @@ const Sidebar: FC<SidebarProps> = ({ children }) => {
 
   const handleButton = () => {
     if (settings.enableCreatingNewTasks) {
-      // Handle creating new tasks logic here
+      return openModal(setAddModal)
     } else {
       return toast.error(
         ResponseMessage("Creating new tasks")?.SETTINGS_DISABLED,
@@ -39,6 +42,7 @@ const Sidebar: FC<SidebarProps> = ({ children }) => {
 
   return (
     <div className="app-container">
+      {addModal && <EditModal setShowModal={setAddModal} page="add"/>}
       <div className="sidebar">
         <div className="sidebar-container">
           <h1>Logo</h1>
