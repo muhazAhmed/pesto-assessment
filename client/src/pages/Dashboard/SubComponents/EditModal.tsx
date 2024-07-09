@@ -1,12 +1,14 @@
 import { FC } from "react";
 import PopupModal from "../../../components/PopupModal/PopupModal";
-import "./style.scss"
+import "./style.scss";
+import { closeModal } from "../../../utils/commonFunctions";
 
 interface EditModalProps {
   setShowModal: any;
+  page: string;
 }
 
-const EditModal: FC<EditModalProps> = ({ setShowModal }) => {
+const EditModal: FC<EditModalProps> = ({ setShowModal, page }) => {
   return (
     <PopupModal setModal={setShowModal}>
       <div className="modal-body">
@@ -29,8 +31,8 @@ const EditModal: FC<EditModalProps> = ({ setShowModal }) => {
         </select>
       </div>
       <div className="modal-footer">
-        <button>Update</button>
-        <button>Cancel</button>
+        <button>{page == "edit" ? "Update" : "Add"}</button>
+        <button onClick={() => closeModal(setShowModal)}>Cancel</button>
       </div>
     </PopupModal>
   );
