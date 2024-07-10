@@ -64,7 +64,7 @@ const Dashboard = () => {
     <div className="dashboard">
       {loading && <Loading />}
       {editModal && <EditModal setShowModal={setEditModal} page="edit" />}
-      {deleteModal && <DeleteModal setModal={setDeleteModal} />}
+      {deleteModal && <DeleteModal setModal={setDeleteModal} page="delete" />}
       <div className="header">
         <h1>Tasks</h1>
         <div className="search-bar">
