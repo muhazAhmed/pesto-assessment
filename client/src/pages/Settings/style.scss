@@ -24,6 +24,22 @@
             background-color: var(--gray);
             padding: 10px;
             border-radius: 10px;
+
+            #logout {
+                position: static;
+                padding: 10px;
+                background-color: red;
+                color: #ffffff;
+                border-radius: 8px;
+            }
+
+            #login {
+                position: static;
+                padding: 10px;
+                background-color: var(--primary);
+                color: #ffffff;
+                border-radius: 8px;
+            }
         }
 
         button {
