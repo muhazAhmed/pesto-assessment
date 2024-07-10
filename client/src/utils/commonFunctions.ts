@@ -31,7 +31,7 @@ export const useLocalStorage = (key: string) => {
 
 export const logout = (navigate: any, modalState?: any) => {
     deleteLocalStorage("userInfo");
-    deleteLocalStorage("defaultSettings");
+    deleteLocalStorage("userToken");
     toast.success(ResponseMessage("").LOGOUT_SUCCESS)
     modalState ? closeModal(modalState) : "";
     return navigate("/");
@@ -51,7 +51,7 @@ export const ResponseInstances = (res: any, statusCode: number, setData: any) =>
     }
 }
 
-export const fetchUserId = useSessionStorage("userInfo")?._id
+export const fetchUserId = useLocalStorage("userInfo")?._id
 
 export const directWithNewTab = (url: string) => {
     return window.open(url, '_blank');

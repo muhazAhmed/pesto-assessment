@@ -3,7 +3,7 @@ import { API_URI } from "./Constants";
 import { serverVariables } from "./ServerVariables";
 import toast from "react-hot-toast";
 import { ResponseMessage } from "./Validations";
-import { newLocalStorage, useLocalStorage } from "./commonFunctions";
+import { fetchUserId, newLocalStorage, useLocalStorage } from "./commonFunctions";
 import { initialSettings } from "./SettingsContext";
 
 // ============ To Load The Server Initially ============
@@ -27,4 +27,5 @@ export const defaultSettings = () => {
 export const loadData = () => {
     loadServer();
     defaultSettings();
+    fetchUserId
 };

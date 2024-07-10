@@ -2,6 +2,7 @@ export const serverVariables = {
     RELOAD_SERVER: "/load",
     
     NEW_USER: "/user/new",
+    LOGIN_USER: "/user/login",
     FETCH_ONE_USER: "/user/fetch/",
 
     NEW_TASK: "/tasks/new/",
