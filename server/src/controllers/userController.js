@@ -1,11 +1,12 @@
 import userModel from "../models/userModel.js";
-import { EMAIL_EXISTS, REQUIRE_FIELD, RESPONSE_MESSAGE } from "../utils/validation.js";
+import { GenJWT } from "../utils/commonFunctions.js";
+import { EMAIL_EXISTS, PASSWORD_INCORRECT, REQUIRE_FIELD, RESPONSE_MESSAGE } from "../utils/validation.js";
 import bcrypt from "bcrypt";
 
-export const newUser = async(req, res) => {
+export const newUser = async (req, res) => {
     try {
         const data = req.body;
-        const {name, email, password} = data;
+        const { name, email, password } = data;
 
         if (!name) return res.status(400).json(REQUIRE_FIELD("Name"));
         if (!email) return res.status(400).json(REQUIRE_FIELD("Email"));
@@ -28,9 +29,36 @@ export const newUser = async(req, res) => {
     }
 }
 
-export const fetchOneUser = async(req, res) => {
+export const loginUser = async (req, res) => {
     try {
-        const fetchUser = await userModel.findOne({_id: req.params.id});
+        const data = req.body;
+        const { email, password } = data;
+
+        if (!email) return res.status(400).json(REQUIRE_FIELD("Email"));
+        if (!password) return res.status(400).json(REQUIRE_FIELD("Password"));
+
+        let user = await userModel.findOne({ email });
+        if (!user) {
+            return res.status(401).json(PASSWORD_INCORRECT());
+        }
+
+        const matchPassword = await bcrypt.compare(password, user.password);
+        if (!matchPassword) {
+            return res.status(401).json(PASSWORD_INCORRECT());
+        }
+
+        const token = GenJWT(user);
+
+        return res.status(200).json({ user, token, message: RESPONSE_MESSAGE("User").USER_LOGIN })
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json(RESPONSE_MESSAGE("").SERVER_ERROR);
+    }
+}
+
+export const fetchOneUser = async (req, res) => {
+    try {
+        const fetchUser = await userModel.findOne({ _id: req.params.id });
         if (!fetchUser) return res.status(400).json(REQUIRE_FIELD("").NO_USER_FOUND)
 
         return res.status(200).json(fetchUser);

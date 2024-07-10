@@ -17,5 +17,7 @@ export const RESPONSE_MESSAGE = (name) => ({
     USER_UPDATE_REQ: "Update Request has Been Submitted to HR",
     USER_UPDATE: "Updated Successfully",
     NO_USER_FOUND: "No User Found",
+    NO_TASK_FOUND: "No Task Found",
     SERVER_ERROR: "Server Error",
+    TASK_DELETE: "Task Deleted Successfully",
 })
