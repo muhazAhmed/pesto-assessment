@@ -6,7 +6,9 @@ import toast from "react-hot-toast";
 import { useSettings } from "../../utils/SettingsContext";
 import { ResponseMessage } from "../../utils/Validations";
 import EditModal from "../../pages/Dashboard/SubComponents/EditModal";
-import { openModal } from "../../utils/commonFunctions";
+import { fetchUserId, openModal } from "../../utils/commonFunctions";
+import Login from "../../pages/Login/Login";
+import Loading from "../Loading/Loading";
 
 interface SidebarProps {
   children: any;
@@ -14,6 +16,8 @@ interface SidebarProps {
 const Sidebar: FC<SidebarProps> = ({ children }) => {
   const [selectedItem, setSelectedItem] = useState<number | null>(0);
   const [addModal, setAddModal] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [formModal, setFormModal] = useState<boolean>(false);
   const navigate = useNavigate();
   const { settings } = useSettings();
 
@@ -29,7 +33,12 @@ const Sidebar: FC<SidebarProps> = ({ children }) => {
 
   const handleButton = () => {
     if (settings.enableCreatingNewTasks) {
-      return openModal(setAddModal)
+      if (fetchUserId) {
+        return openModal(setAddModal);
+      } else {
+        toast.error("Please Login")
+        return openModal(setFormModal);
+      }
     } else {
       return toast.error(
         ResponseMessage("Creating new tasks")?.SETTINGS_DISABLED,
@@ -42,7 +51,9 @@ const Sidebar: FC<SidebarProps> = ({ children }) => {
 
   return (
     <div className="app-container">
-      {addModal && <EditModal setShowModal={setAddModal} page="add"/>}
+      {loading && <Loading />}
+      {addModal && <EditModal setShowModal={setAddModal} page="add" />}
+      {formModal && <Login setModal={setFormModal} setLoading={setLoading} />}
       <div className="sidebar">
         <div className="sidebar-container">
           <h1>Logo</h1>
