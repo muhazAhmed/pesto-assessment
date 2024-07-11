@@ -10,4 +10,6 @@ export const serverVariables = {
     FETCH_ALL_TASK: "/tasks/fetch-all/",
     UPDATE_TASK: "/tasks/update/",
     DELETE_TASK: "/tasks/delete/",
+
+    NEW_MESSAGE: "/support/new",
 }
