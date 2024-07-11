@@ -23,7 +23,7 @@ const Settings = () => {
     <div className="settings">
       {loading && <Loading />}
       {logoutModal && <DeleteModal setModal={setLogoutModal} page="logout" />}
-      {formModal && <Login setLoading={setLoading} setModal={formModal} />}
+      {formModal && <Login setLoading={setLoading} setModal={setFormModal} />}
       <h1>Settings</h1>
       <div className="setting-container">
         <h3>General Settings</h3>
