@@ -7,43 +7,43 @@ export const createTask = async (req, res) => {
         const data = req.body;
         const { userId, title, description, status } = data;
 
-        if (!req.params.id) return res.status(400).json(REQUIRE_FIELD("User ID"));
-        if (!title) return res.status(400).json(REQUIRE_FIELD("Title"));
-        if (!description) return res.status(400).json(REQUIRE_FIELD("Description"));
+        if (!req.params.id) return res.status(400).json({ message: REQUIRE_FIELD("User ID") });
+        if (!title) return res.status(400).json({ message: REQUIRE_FIELD("Title") });
+        if (!description) return res.status(400).json({ message: REQUIRE_FIELD("Description") });
 
         const userExists = await findUser(req.params.id, res);
         if (userExists) {
             data.userId = req.params.id;
             await taskModel.create(data);
-            return res.status(201).json(RESPONSE_MESSAGE("").NEW_TASK);
+            return res.status(201).json({ message: RESPONSE_MESSAGE("").NEW_TASK });
         } else {
-            return res.status(400).json(REQUIRE_FIELD("").NO_USER_FOUND);
+            return res.status(400).json({ message: REQUIRE_FIELD("").NO_USER_FOUND });
         }
     } catch (error) {
         console.log(error.message);
-        return res.status(500).json(RESPONSE_MESSAGE("").SERVER_ERROR);
+        return res.status(500).json({ message: RESPONSE_MESSAGE("").SERVER_ERROR });
     }
 };
 
 export const fetchOneTask = async (req, res) => {
     try {
         const fetchOneData = await taskModel.findById({ _id: req.params.id });
-        if (!fetchOneData) return res.status(404).json("No data found");
+        if (!fetchOneData) return res.status(404).json({ message: "No data found" });
         return res.status(200).json(fetchOneData);
     } catch (error) {
         console.log(error.message);
-        return res.status(500).json(RESPONSE_MESSAGE("").SERVER_ERROR);
+        return res.status(500).json({ message: RESPONSE_MESSAGE("").SERVER_ERROR });
     }
 };
 
 export const fetchAllTask = async (req, res) => {
     try {
         const fetchAllData = await taskModel.find({ userId: req.params.id });
-        if (!fetchAllData) return res.status(404).json("No data found");
+        if (!fetchAllData) return res.status(404).json({ message: "No data found" });
         return res.status(200).json(fetchAllData);
     } catch (error) {
         console.log(error.message);
-        return res.status(500).json(RESPONSE_MESSAGE("").SERVER_ERROR);
+        return res.status(500).json({ message: RESPONSE_MESSAGE("").SERVER_ERROR });
     }
 };
 
@@ -54,19 +54,18 @@ export const updateTask = async (req, res) => {
 
         const taskExists = await findTask(req.params.id, res);
         if (taskExists) {
-            const resp = await taskModel.findOneAndUpdate(
+            await taskModel.findOneAndUpdate(
                 { _id: req.params.id },
                 { $set: data },
                 { new: true }
             );
-            console.log(resp)
-            return res.status(200).json(RESPONSE_MESSAGE("").USER_UPDATE);
+            return res.status(200).json({ message: RESPONSE_MESSAGE("").USER_UPDATE });
         } else {
-            return res.status(400).json(REQUIRE_FIELD("").NO_TASK_FOUND);
+            return res.status(400).json({ message: REQUIRE_FIELD("").NO_TASK_FOUND });
         }
     } catch (error) {
         console.log(error.message);
-        return res.status(500).json(RESPONSE_MESSAGE("").SERVER_ERROR);
+        return res.status(500).json({ message: RESPONSE_MESSAGE("").SERVER_ERROR });
     }
 };
 
@@ -75,12 +74,12 @@ export const deleteTask = async (req, res) => {
         const taskExists = await findTask(req.params.id, res);
         if (taskExists) {
             await taskModel.findByIdAndDelete(req.params.id);
-            return res.status(200).json(RESPONSE_MESSAGE("").TASK_DELETE);
+            return res.status(200).json({ message: RESPONSE_MESSAGE("").TASK_DELETE });
         } else {
-            return res.status(400).json(REQUIRE_FIELD("").NO_TASK_FOUND);
+            return res.status(400).json({ message: REQUIRE_FIELD("").NO_TASK_FOUND });
         }
     } catch (error) {
         console.log(error.message);
-        return res.status(500).json(RESPONSE_MESSAGE("").SERVER_ERROR);
+        return res.status(500).json({ message: RESPONSE_MESSAGE("").SERVER_ERROR });
     }
 };

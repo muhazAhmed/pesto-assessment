@@ -20,4 +20,5 @@ export const RESPONSE_MESSAGE = (name) => ({
     NO_TASK_FOUND: "No Task Found",
     SERVER_ERROR: "Server Error",
     TASK_DELETE: "Task Deleted Successfully",
+    NEW_MESSAGE: "Submitted Successfully"
 })
