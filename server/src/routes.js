@@ -1,6 +1,7 @@
 import express from "express";
 import { fetchOneUser, loginUser, newUser } from "./controllers/userController.js";
 import { createTask, deleteTask, fetchAllTask, fetchOneTask, updateTask } from "./controllers/taskController.js";
+import { newMessage } from "./controllers/supportController.js";
 const routes = express.Router();
 
 routes.get("/load", (req, res) => {
@@ -18,5 +19,9 @@ routes.get("/tasks/fetch/:id", fetchOneTask)
 routes.get("/tasks/fetch-all/:id", fetchAllTask)
 routes.patch("/tasks/update/:id", updateTask)
 routes.delete("/tasks/delete/:id", deleteTask)
+
+// ============ Services API's ==============
+routes.post("/support/new", newMessage)
+
 
 export default routes;
