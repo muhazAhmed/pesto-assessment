@@ -4,6 +4,7 @@ import "./style.scss";
 import { useState } from "react";
 import { PostMethodAPI } from "../../utils/axios";
 import { serverVariables } from "../../utils/ServerVariables";
+import Loading from "../../components/Loading/Loading";
 
 const Contact = () => {
   const [inputs, setInputs] = useState<any>({
@@ -20,12 +21,12 @@ const Contact = () => {
   };
 
   const handleSubmit = async () => {
-    const res = await PostMethodAPI(serverVariables?.NEW_MESSAGE, inputs, setLoading);
-    
+    await PostMethodAPI(serverVariables?.NEW_MESSAGE, inputs, setLoading);
   };
 
   return (
     <div className="contact">
+      {loading && <Loading />}
       <motion.div
         className="left"
         initial={defaultSettings?.isAnimationEnabled && { opacity: 0, x: 50 }}
