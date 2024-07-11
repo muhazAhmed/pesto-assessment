@@ -5,7 +5,10 @@ import "./style.scss";
 import { loginValidation, registerValidations } from "./Validation";
 import { PostMethodAPI } from "../../utils/axios";
 import { serverVariables } from "../../utils/ServerVariables";
-import { newLocalStorage } from "../../utils/commonFunctions";
+import {
+  deleteSessionStorage,
+  newLocalStorage,
+} from "../../utils/commonFunctions";
 
 interface ModalProps {
   setModal: any;
@@ -29,11 +32,13 @@ const Login: FC<ModalProps> = ({ setModal, setLoading }) => {
     setInputs((prev: any) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const SuccessResponse = (result: any, res: any) => {
+  const SuccessResponse = (result: any) => {
+    deleteSessionStorage("isDemoAccount");
     newLocalStorage("userInfo", result);
-    newLocalStorage("userToken", res?.res?.data?.token);
     setValid(false);
     setModal(false);
+    newLocalStorage("1rfg3", false);
+    return location?.reload();
   };
 
   const handleSubmit = async () => {
@@ -50,7 +55,7 @@ const Login: FC<ModalProps> = ({ setModal, setLoading }) => {
           console.error(res.message);
         } else if (res.res.status === 200) {
           const result = res?.res?.data?.user;
-          SuccessResponse(result, res);
+          SuccessResponse(result);
         } else {
           return false;
         }
@@ -66,8 +71,8 @@ const Login: FC<ModalProps> = ({ setModal, setLoading }) => {
         if (res instanceof Error) {
           console.error(res.message);
         } else if (res.res.status === 201) {
-          const result = res?.res?.data?.result;
-          return SuccessResponse(result, res);
+          const result = res?.res?.data?.createUser;
+          return SuccessResponse(result);
         }
       }
     }
