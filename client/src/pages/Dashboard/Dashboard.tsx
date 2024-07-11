@@ -1,46 +1,37 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import "./style.scss";
-import { openModal, useLocalStorage } from "../../utils/commonFunctions";
+import {
+  fetchUserId,
+  openModal,
+  useLocalStorage,
+} from "../../utils/commonFunctions";
 import EditModal from "./SubComponents/EditModal";
 import Loading from "../../components/Loading/Loading";
 import DeleteModal from "./SubComponents/DeleteModal";
+import { fetchAllTasks, fetchDummyData } from "../../utils/onPageLoad";
+import Login from "../Login/Login";
 
 const Dashboard = () => {
   const [selectedFilter, setSelectedFilter] = useState<string>("");
+  const [selectedTaskId, setSelectedTaskId] = useState<string>("");
   const [editModal, setEditModal] = useState<boolean>(false);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [formModal, setFormModal] = useState<boolean>(false);
+  const [searchTitle, setSearchTitle] = useState<string>("");
+  const [data, setData] = useState<any>([]);
   const colors = ["glassPurple", "glassBlue", "glassPink"];
   const containerRef = useRef<HTMLDivElement>(null);
   const defaultSettings = useLocalStorage("defaultSettings");
 
-  const items = [
-    {
-      date: "12-04-2024",
-      title: "demo title",
-      desc: "ns properties like Padding, Spacing, Spacing Mode",
-      status: "Done",
-    },
-    {
-      date: "10-04-2024",
-      title: "demo title 2",
-      desc: "ns properties like Padding, Spacing, Spacing Mode",
-      status: "In Progress",
-    },
-    {
-      date: "10-04-2024",
-      title: "demo title 2",
-      desc: "ns properties like Padding, Spacing, Spacing Mode",
-      status: "In Progress",
-    },
-    {
-      date: "10-04-2024",
-      title: "demo title 2",
-      desc: "ns properties like Padding, Spacing, Spacing Mode",
-      status: "In Progress",
-    },
-  ];
+  useEffect(() => {
+    if (fetchUserId) {
+      fetchAllTasks(setLoading, setData);
+    } else {
+      setData(fetchDummyData());
+    }
+  }, []);
 
   let previousColor: string | null = null;
   const getRandomColor = (previousColor: string | null): string => {
@@ -51,24 +42,54 @@ const Dashboard = () => {
     return color;
   };
 
-  const filteredItems = items.filter((item) => {
-    if (selectedFilter === "" || selectedFilter === "all") return true;
-    if (selectedFilter === "toDo" && item.status === "To Do") return true;
-    if (selectedFilter === "inProgress" && item.status === "In Progress")
-      return true;
-    if (selectedFilter === "done" && item.status === "Done") return true;
-    return false;
-  });
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTitle(e.target.value);
+  };
+
+  const filteredItems = data
+    .filter((item: any) => {
+      if (selectedFilter === "" || selectedFilter === "all") return true;
+      if (selectedFilter === "toDo" && item.status === "To Do") return true;
+      if (selectedFilter === "inProgress" && item.status === "In Progress")
+        return true;
+      if (selectedFilter === "done" && item.status === "Done") return true;
+      return false;
+    })
+    .filter((item: any) => {
+      return item.title.toLowerCase().includes(searchTitle.toLowerCase());
+    });
 
   return (
     <div className="dashboard">
       {loading && <Loading />}
-      {editModal && <EditModal setShowModal={setEditModal} page="edit" />}
-      {deleteModal && <DeleteModal setModal={setDeleteModal} page="delete" />}
+      {formModal && <Login setLoading={setLoading} setModal={setFormModal} />}
+
+      {editModal && (
+        <EditModal
+          setShowModal={setEditModal}
+          page="edit"
+          setLoading={setLoading}
+          taskData={selectedTaskId}
+          fetchData={() => fetchAllTasks(setLoading, setData)}
+        />
+      )}
+      {deleteModal && (
+        <DeleteModal
+          setModal={setDeleteModal}
+          setLoading={setLoading}
+          fetchData={() => fetchAllTasks(setLoading, setData)}
+          taskID={selectedTaskId}
+          page="delete"
+        />
+      )}
       <div className="header">
         <h1>Tasks</h1>
         <div className="search-bar">
-          <input placeholder="Search Title..." />
+          <input
+            placeholder="Search Title..."
+            value={searchTitle}
+            onChange={handleSearchChange}
+          />
           <i className="fa-solid fa-search"></i>
         </div>
         <select
@@ -84,6 +105,18 @@ const Dashboard = () => {
           <option value="done">Done</option>
         </select>
       </div>
+      {filteredItems.length === 0 && (
+        <motion.div
+          className="empty-state"
+          initial={
+            defaultSettings?.isAnimationEnabled && { opacity: 0, y: -20 }
+          }
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h1>No tasks found, Click on (+ New Task)</h1>
+        </motion.div>
+      )}
       <motion.div
         className="dashboard-container"
         initial={{ opacity: 0 }}
@@ -125,17 +158,21 @@ const Dashboard = () => {
                 </h5>
               </div>
               <h3>{item?.title}</h3>
-              <p>{item?.desc}</p>
+              <p>{item?.description}</p>
               <div className="buttons">
                 <i
                   className="fa-solid fa-pencil"
                   data-title="Edit"
-                  onClick={() => openModal(setEditModal)}
+                  onClick={() => {
+                    setSelectedTaskId(item), openModal(setEditModal);
+                  }}
                 ></i>
                 <i
                   className="fa-solid fa-trash"
                   data-title="Delete"
-                  onClick={() => openModal(setDeleteModal)}
+                  onClick={() => {
+                    setSelectedTaskId(item?._id), openModal(setDeleteModal);
+                  }}
                 ></i>
               </div>
             </motion.div>
