@@ -31,10 +31,10 @@ export const useLocalStorage = (key: string) => {
 
 export const logout = (navigate: any, modalState?: any) => {
     deleteLocalStorage("userInfo");
-    deleteLocalStorage("userToken");
     toast.success(ResponseMessage("").LOGOUT_SUCCESS)
     modalState ? closeModal(modalState) : "";
-    return navigate("/");
+    navigate("/");
+    return location?.reload();
 };
 
 export const openModal = (setModal: any) => { return setModal(true) };

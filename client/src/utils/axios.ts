@@ -42,3 +42,70 @@ export const PostMethodAPI = async (
     loading(false);
   }
 };
+
+export const GetMethodAPI = async (
+  variable: string,
+  inputs: any,
+  loading: (isLoading: boolean) => void
+): Promise<{ res: ApiResponse; successMessage: string } | Error> => {
+  try {
+    loading(true);
+    const res: ApiResponse = await axios.get(API_URI + variable, {
+      params: inputs,
+    });
+    if (res.status === 200) {
+      const successMessage = res?.data?.message || undefined;
+      successMessage != undefined && toast.success(successMessage);
+      return { res, successMessage };
+    } else {
+      return serverError(res);
+    }
+  } catch (error: any) {
+    return serverError(error);
+  } finally {
+    loading(false);
+  }
+};
+
+export const PatchMethodAPI = async (
+  variable: string,
+  inputs: any,
+  loading: (isLoading: boolean) => void
+): Promise<{ res: ApiResponse; successMessage: string } | Error> => {
+  try {
+    loading(true);
+    const res: ApiResponse = await axios.patch(API_URI + variable, inputs);
+    if (res.status === 200) {
+      const successMessage = res?.data?.message || undefined;
+      successMessage != undefined && toast.success(successMessage);
+      return { res, successMessage };
+    } else {
+      return serverError(res);
+    }
+  } catch (error: any) {
+    return serverError(error);
+  } finally {
+    loading(false);
+  }
+};
+
+export const DeleteMethodAPI = async (
+  variable: string,
+  loading: (isLoading: boolean) => void
+): Promise<{ res: ApiResponse; successMessage: string } | Error> => {
+  try {
+    loading(true);
+    const res: ApiResponse = await axios.delete(API_URI + variable);
+    if (res.status === 200) {
+      const successMessage = res?.data?.message || undefined;
+      successMessage != undefined && toast.success(successMessage);
+      return { res, successMessage };
+    } else {
+      return serverError(res);
+    }
+  } catch (error: any) {
+    return serverError(error);
+  } finally {
+    loading(false);
+  }
+};
