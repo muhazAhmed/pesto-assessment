@@ -6,10 +6,11 @@ export const createTask = async (req, res) => {
     try {
         const data = req.body;
         const { userId, title, description, status } = data;
-
+        
         if (!req.params.id) return res.status(400).json({ message: REQUIRE_FIELD("User ID") });
         if (!title) return res.status(400).json({ message: REQUIRE_FIELD("Title") });
         if (!description) return res.status(400).json({ message: REQUIRE_FIELD("Description") });
+        if (status.length < 1) data.status = "To Do";
 
         const userExists = await findUser(req.params.id, res);
         if (userExists) {
