@@ -67,6 +67,7 @@ const EditModal: FC<EditModalProps> = ({
   const handleButton = async () => {
     const isValid = formValidation(inputs);
     setValid(isValid);
+    console.log(valid)
     if (isValid) {
       if (useSessionStorage("isDemoAccount")) {
         if (page == "edit") {
