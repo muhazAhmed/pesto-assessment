@@ -75,3 +75,47 @@
         padding: 10px;
     }
 }
+
+@media (min-width: 769px) {
+    .sidebar i.fa-bars,
+    .sidebar i.fa-xmark {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        height: 100vh;
+
+        .fa-bars {
+            position: absolute;
+            top: 10px;
+            left: 5px;
+            padding: 10px 12px;
+            font-size: 20px;
+            background-color: var(--primaryHover);
+            border-radius: 25px;
+            z-index: 9999;
+        }
+
+        .sidebar-container {
+            position: fixed !important;
+            z-index: 9999 !important;
+            width: 55vw !important;
+            transition: width 0.3s ease;
+
+            &.closed {
+                width: 0;
+            }
+
+            .fa-xmark {
+                position: absolute;
+                right: -18px;
+                padding: 10px 12px;
+                font-size: 20px;
+                background-color: var(--primaryHover);
+                border-radius: 25px;
+            }
+        }
+    }
+}

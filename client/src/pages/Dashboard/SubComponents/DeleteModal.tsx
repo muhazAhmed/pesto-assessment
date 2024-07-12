@@ -47,7 +47,7 @@ const DeleteModal: FC<PopupModalProps> = ({
           Are you sure you want to
           {page === "delete" ? (
             <>
-              <span>Delete</span> this item
+              <span>&nbsp;Delete</span> this item
             </>
           ) : (
             <span> logout</span>

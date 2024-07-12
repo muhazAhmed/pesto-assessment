@@ -98,3 +98,29 @@
         }
     }
 }
+
+@media (max-width: 768px) {
+    .contact {
+        flex-direction: column-reverse;
+        align-items: center;
+
+        .right,
+        .left {
+            width: 95%;
+        }
+
+        .right {
+            .header {
+                margin-bottom: 1rem;
+
+                h1,
+                h2 {
+                    font-size: 30px !important;
+                }
+            }
+            p {
+                font-size: 15px;
+            }
+        }
+    }
+}

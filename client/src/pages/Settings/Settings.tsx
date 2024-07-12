@@ -2,7 +2,7 @@ import "./style.scss";
 import Switch from "react-switch";
 import { toggleItems } from "./ArrayOfItems";
 import { useSettings } from "../../utils/SettingsContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeleteModal from "../Dashboard/SubComponents/DeleteModal";
 import { fetchUserId, openModal } from "../../utils/commonFunctions";
 import Login from "../Login/Login";
@@ -18,6 +18,12 @@ const Settings = () => {
     const updatedSettings = { ...settings, [item]: !settings[item] };
     updateSettings(updatedSettings);
   };
+
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      updateSettings({ ...settings, isAnimationEnabled: false });
+    }
+  }, []);
 
   return (
     <div className="settings">

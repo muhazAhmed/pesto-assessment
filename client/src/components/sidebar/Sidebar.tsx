@@ -26,8 +26,10 @@ const Sidebar: FC<SidebarProps> = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [formModal, setFormModal] = useState<boolean>(false);
   const [warningModal, setWarningModal] = useState<boolean>(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   const navigate = useNavigate();
   const { settings } = useSettings();
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   useEffect(() => {
     const currentPath = location.pathname;
@@ -88,24 +90,37 @@ const Sidebar: FC<SidebarProps> = ({ children }) => {
       )}
       {formModal && <Login setModal={setFormModal} setLoading={setLoading} />}
       <div className="sidebar">
-        <div className="sidebar-container">
-          <h1 onClick={() => navigate("/")}>Logo</h1>
-          {sidebarItems?.map((item: any, index: number) => (
-            <div
-              className={
-                selectedItem === index ? "icon-shell selected" : "icon-shell"
-              }
-              key={index}
-              onClick={() => handleClick(index, item?.path)}
-            >
-              <i className={item?.icon}></i>
-              <h4>{item?.label}</h4>
-            </div>
-          ))}
-          <div className="icon-shell new-task-button" onClick={handleButton}>
-            <i className="fa-solid fa-plus"></i>
-            <h4>New Task</h4>
-          </div>
+        <div className={` ${isSidebarOpen ? "sidebar-container" : "closed"}`}>
+          <i
+            className={`fa-solid ${isSidebarOpen ? "fa-xmark" : "fa-bars"}`}
+            onClick={toggleSidebar}
+          ></i>
+          {isSidebarOpen && (
+            <>
+              <h1 onClick={() => navigate("/")}>Logo</h1>
+              {sidebarItems?.map((item: any, index: number) => (
+                <div
+                  className={
+                    selectedItem === index
+                      ? "icon-shell selected"
+                      : "icon-shell"
+                  }
+                  key={index}
+                  onClick={() => handleClick(index, item?.path)}
+                >
+                  <i className={item?.icon}></i>
+                  <h4>{item?.label}</h4>
+                </div>
+              ))}
+              <div
+                className="icon-shell new-task-button"
+                onClick={handleButton}
+              >
+                <i className="fa-solid fa-plus"></i>
+                <h4>New Task</h4>
+              </div>
+            </>
+          )}
         </div>
         <div className="content">{children}</div>
       </div>
