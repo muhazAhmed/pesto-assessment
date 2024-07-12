@@ -27,3 +27,15 @@
         }
     }
 }
+
+@media (max-width: 768px) {
+    .pnf {
+        img {
+            width: 60vw;
+        }
+
+        button {
+            width: 30vw;
+        }
+    }
+}
