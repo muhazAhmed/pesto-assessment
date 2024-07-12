@@ -36,7 +36,7 @@ const Sidebar: FC<SidebarProps> = ({ children }) => {
 
   useEffect(() => {
     const warning = useLocalStorage("1rfg3");
-    const warningRead = useLocalStorage("dfd433");
+    const warningRead = useLocalStorage("dfd433"); //flag, so that warning popup will show only once
     setTimeout(() => {
       if (warning === false && !fetchUserId) {
         if (!warningRead) {
