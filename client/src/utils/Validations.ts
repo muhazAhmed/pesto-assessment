@@ -4,6 +4,8 @@ export const ResponseMessage = (name?: any) => ({
   TRY_AGAIN: "Please Try Again After Some Time",
   FILTER_APPLIED: `${name} Filter Applied`,
   SETTINGS_DISABLED: `${name} has been disabled in Settings`,
+  SERVER_RESTART: "Please wait until server gets restarted",
+  CONNECTED: "Connection Successful",
 
   // ============ Form ==========
   REQUIRED_FIELD: `Please Enter ${name}`,
