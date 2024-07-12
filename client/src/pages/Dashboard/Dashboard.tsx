@@ -11,6 +11,7 @@ import Loading from "../../components/Loading/Loading";
 import DeleteModal from "./SubComponents/DeleteModal";
 import { fetchAllTasks, fetchDummyData } from "../../utils/onPageLoad";
 import Login from "../Login/Login";
+import ViewModal from "./SubComponents/ViewModal";
 
 const Dashboard = () => {
   const [selectedFilter, setSelectedFilter] = useState<string>("");
@@ -19,6 +20,7 @@ const Dashboard = () => {
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [formModal, setFormModal] = useState<boolean>(false);
+  const [viewModal, setViewModal] = useState<boolean>(false);
   const [searchTitle, setSearchTitle] = useState<string>("");
   const [data, setData] = useState<any>([]);
   const colors = ["glassPurple", "glassBlue", "glassPink"];
@@ -46,6 +48,13 @@ const Dashboard = () => {
     setSearchTitle(e.target.value);
   };
 
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + "...";
+    }
+    return text;
+  };
+
   const filteredItems = data
     .filter((item: any) => {
       if (selectedFilter === "" || selectedFilter === "all") return true;
@@ -63,6 +72,9 @@ const Dashboard = () => {
     <div className="dashboard">
       {loading && <Loading />}
       {formModal && <Login setLoading={setLoading} setModal={setFormModal} />}
+      {viewModal && (
+        <ViewModal setModal={setViewModal} taskInfo={selectedTaskId} />
+      )}
 
       {editModal && (
         <EditModal
@@ -142,6 +154,9 @@ const Dashboard = () => {
               drag={defaultSettings?.isAnimationEnabled}
               dragConstraints={containerRef}
               dragElastic={0.5}
+              onClick={() => {
+                setSelectedTaskId(item), openModal(setViewModal);
+              }}
             >
               <div className="header">
                 <h5>{item?.date}</h5>
@@ -158,19 +173,21 @@ const Dashboard = () => {
                 </h5>
               </div>
               <h3>{item?.title}</h3>
-              <p>{item?.description}</p>
+              <p>{truncateText(item?.description, 100)}</p>
               <div className="buttons">
                 <i
                   className="fa-solid fa-pencil"
                   data-title="Edit"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setSelectedTaskId(item), openModal(setEditModal);
                   }}
                 ></i>
                 <i
                   className="fa-solid fa-trash"
                   data-title="Delete"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setSelectedTaskId(item?._id), openModal(setDeleteModal);
                   }}
                 ></i>
