@@ -10,7 +10,7 @@ import {
 import { PatchMethodAPI, PostMethodAPI } from "../../../utils/axios";
 import { serverVariables } from "../../../utils/ServerVariables";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { formValidation } from "../validation";
 
 interface EditModalProps {
   setShowModal: any;
@@ -28,6 +28,7 @@ const EditModal: FC<EditModalProps> = ({
   fetchData,
 }) => {
   const navigate = useNavigate();
+  const [valid, setValid] = useState<boolean>(false);
   const [inputs, setInputs] = useState<any>({
     title: "",
     description: "",
@@ -45,7 +46,8 @@ const EditModal: FC<EditModalProps> = ({
   }, [page, taskData]);
 
   const handleInputChange = (e: any) => {
-    setInputs((prev: any) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setInputs((prev: any) => ({ ...prev, [name]: value }));
   };
 
   const resFunc = (res: any) => {
@@ -53,7 +55,6 @@ const EditModal: FC<EditModalProps> = ({
       if (page == "add") {
         location.reload();
       } else {
-        toast.success("Task has been updated successfully")
         fetchData();
       }
       closeModal(setShowModal);
@@ -64,32 +65,38 @@ const EditModal: FC<EditModalProps> = ({
   };
 
   const handleButton = async () => {
-    if (useSessionStorage("isDemoAccount")) {
-      if (page == "edit") {
-        const sessionData = useSessionStorage("dummy-data") || [];
-        const newSessionData = sessionData.map((task: any) =>
-          task._id === taskData?._id ? { ...task, ...inputs } : task
-        );
+    const isValid = formValidation(inputs);
+    setValid(isValid);
+    if (isValid) {
+      if (useSessionStorage("isDemoAccount")) {
+        if (page == "edit") {
+          const sessionData = useSessionStorage("dummy-data") || [];
+          const newSessionData = sessionData.map((task: any) =>
+            task._id === taskData?._id ? { ...task, ...inputs } : task
+          );
 
-        newSessionStorage("dummy-data", newSessionData);
-        closeModal(setShowModal);
+          newSessionStorage("dummy-data", newSessionData);
+          closeModal(setShowModal);
+        } else {
+          return;
+        }
+      } else if (fetchUserId && page === "edit") {
+        const res = await PatchMethodAPI(
+          serverVariables?.UPDATE_TASK + taskData?._id,
+          inputs,
+          setLoading
+        );
+        resFunc(res);
+      } else if (fetchUserId && page === "add") {
+        const res = await PostMethodAPI(
+          serverVariables?.NEW_TASK + fetchUserId,
+          inputs,
+          setLoading
+        );
+        resFunc(res);
       } else {
         return;
       }
-    } else if (fetchUserId && page === "edit") {
-      const res = await PatchMethodAPI(
-        serverVariables?.UPDATE_TASK + taskData?._id,
-        inputs,
-        setLoading
-      );
-      resFunc(res);
-    } else {
-      const res = await PostMethodAPI(
-        serverVariables?.NEW_TASK + fetchUserId,
-        inputs,
-        setLoading
-      );
-      resFunc(res);
     }
   };
   return (
@@ -114,18 +121,21 @@ const EditModal: FC<EditModalProps> = ({
             onChange={handleInputChange}
           />
         </div>
-        <select
-          name="status"
-          value={inputs.status}
-          onChange={handleInputChange}
-        >
-          <option value="Filter" disabled style={{ display: "none" }}>
-            Filter
-          </option>
-          <option value="To Do">To Do</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Done">Done</option>
-        </select>
+        <div className="item">
+          <label>Status:</label>
+          <select
+            name="status"
+            value={inputs.status || ""}
+            onChange={handleInputChange}
+          >
+            <option value="Filter" disabled style={{ display: "none" }}>
+              Filter
+            </option>
+            <option value="To Do">To Do</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Done">Done</option>
+          </select>
+        </div>
       </div>
       <div className="modal-footer">
         <button onClick={handleButton}>
