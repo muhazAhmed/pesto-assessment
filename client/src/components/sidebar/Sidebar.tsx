@@ -11,6 +11,7 @@ import {
   newLocalStorage,
   openModal,
   useLocalStorage,
+  useSessionStorage,
 } from "../../utils/commonFunctions";
 import Login from "../../pages/Login/Login";
 import Loading from "../Loading/Loading";
@@ -39,6 +40,7 @@ const Sidebar: FC<SidebarProps> = ({ children }) => {
   useEffect(() => {
     const warning = useLocalStorage("1rfg3");
     const warningRead = useLocalStorage("dfd433"); //flag, so that warning popup will show only once
+    const serverLoading = useSessionStorage("afg44");
     setTimeout(() => {
       if (warning === false && !fetchUserId) {
         if (!warningRead) {
@@ -48,7 +50,7 @@ const Sidebar: FC<SidebarProps> = ({ children }) => {
       } else {
         newLocalStorage("1rfg3", false);
       }
-    }, 7000);
+    }, serverLoading ? 20000 : 8000);
   }, []);
 
   const handleClick = (index: number, path: string) => {
